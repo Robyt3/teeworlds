@@ -37,6 +37,8 @@ static CNetClient s_NetClient;
 static unsigned char s_aVersionPacket[sizeof(VERSIONSRV_VERSION) + sizeof(GAME_RELEASE_VERSION)];
 static CMapversionPacketData s_aMapversionPackets07[MAX_PACKETS];
 static unsigned s_NumMapversionPackets07 = 0;
+static CMapversionPacketData s_aMapversionPackets08[MAX_PACKETS];
+static unsigned s_NumMapversionPackets08 = 0;
 
 static void BuildVersionPacket()
 {
@@ -51,6 +53,10 @@ static bool GetMapversionPackets(unsigned ClientVersion, CMapversionPacketData *
 		case 0x0700: // 0.7.x
 			*pPacketData = s_aMapversionPackets07;
 			*pNumPackets = &s_NumMapversionPackets07;
+			return true;
+		case 0x0800: // 0.8.x
+			*pPacketData = s_aMapversionPackets08;
+			*pNumPackets = &s_NumMapversionPackets08;
 			return true;
 	}
 	*pPacketData = 0x0;
@@ -158,7 +164,8 @@ int main(int argc, const char **argv)
 	dbg_msg("versionsrv", "building packets");
 
 	BuildVersionPacket();
-	BuildMapversionPacket(0x0700, s_aMapVersionList, s_NumMapVersionItems);
+	BuildMapversionPacket(0x0700, s_aMapVersionList07, s_NumMapVersionItems07);
+	BuildMapversionPacket(0x0800, s_aMapVersionList, s_NumMapVersionItems);
 
 	dbg_msg("versionsrv", "started");
 
